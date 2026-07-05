@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, redirect, url_for, flash, sen
 from flask_sqlalchemy import SQLAlchemy
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from datetime import datetime
-import stripe
 
 app = Flask(__name__)
 app.secret_key = "Kelvin2026yyyy@"
@@ -13,9 +12,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orphanage.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOADED_PHOTOS_DEST'] = 'static/uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload
-
-# --- STRIPE (Credit/Debit Cards) ---
-stripe.api_key = "sk_test_xxxxxxxxxxxx"  # Replace with your real key later
 
 # --- UPLOAD SETUP ---
 photos = UploadSet('photos', IMAGES)
@@ -29,10 +25,10 @@ class Child(db.Model):
     name = db.Column(db.String(100), nullable=False)
     age = db.Column(db.Integer, nullable=False)
     gender = db.Column(db.String(10))
-    photo_filename = db.Column(db.String(200))  # Stores filename, not URL
+    photo_filename = db.Column(db.String(200))  # Stores filename
     story = db.Column(db.Text)
     school_grade = db.Column(db.String(50))
-    location = db.Column(db.String(200))  # New: Where they were found
+    location = db.Column(db.String(200))
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Donor(db.Model):
@@ -40,7 +36,7 @@ class Donor(db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100))
     amount = db.Column(db.Float, nullable=False)
-    method = db.Column(db.String(50))  # Airtel, MTN, PayPal, Card
+    method = db.Column(db.String(50))
     message = db.Column(db.Text)
     date_donated = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -48,13 +44,13 @@ class BuildingProgress(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(200))
     amount_raised = db.Column(db.Float, default=0.0)
-    target_amount = db.Column(db.Float, default=100000.0)  # Increased target
+    target_amount = db.Column(db.Float, default=100000.0)
     last_updated = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Video(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
-    embed_url = db.Column(db.String(200))  # YouTube/TikTok embed link
+    embed_url = db.Column(db.String(200))
     description = db.Column(db.Text)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -64,7 +60,6 @@ with app.app_context():
     if not BuildingProgress.query.first():
         db.session.add(BuildingProgress(description="Build permanent orphanage home", target_amount=100000.0))
         db.session.commit()
-    # Add sample video if empty
     if not Video.query.first():
         db.session.add(Video(title="Welcome to KM Orphanage", embed_url="https://www.youtube.com/embed/dQw4w9WgXcQ", description="A tour of our home"))
         db.session.commit()
@@ -112,7 +107,6 @@ def contact():
 @app.route('/donate', methods=['GET', 'POST'])
 def donate():
     if request.method == 'POST':
-        # Handle Airtel/MTN manual (record donor)
         donor = Donor(
             name=request.form['name'],
             email=request.form['email'],
@@ -131,7 +125,7 @@ def donate():
         return redirect(url_for('home'))
     return render_template('donate.html')
 
-# --- ADMIN PANEL ---
+# --- ADMIN PANEL (SECURE) ---
 ADMIN_PASSWORD = "Kelvin2026yyyy@"
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -144,7 +138,7 @@ def admin():
             videos = Video.query.all()
             return render_template('admin.html', children=children, donors=donors, progress=progress, videos=videos)
         else:
-            flash("Wrong password!", "danger")
+            flash("Wrong password! Access denied.", "danger")
             return redirect(url_for('admin'))
     return render_template('login.html')
 
@@ -152,7 +146,7 @@ def admin():
 def add_child():
     if request.method == 'POST':
         # Handle photo upload
-        if 'photo' in request.files:
+        if 'photo' in request.files and request.files['photo'].filename != '':
             filename = photos.save(request.files['photo'])
         else:
             filename = 'default.jpg'
