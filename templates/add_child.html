@@ -1,0 +1,53 @@
+ 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Child - Admin</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">➕ Add Child</div>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/admin">← Back to Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width:600px; padding:40px 0;">
+        <h2>Add a New Child</h2>
+        <form method="post">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="form-group">
+                <label>Age</label>
+                <input type="number" name="age" required min="1" max="18">
+            </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <select name="gender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>School Grade</label>
+                <input type="text" name="school_grade" placeholder="e.g. Grade 5">
+            </div>
+            <div class="form-group">
+                <label>Photo URL (from Unsplash or your own)</label>
+                <input type="text" name="photo_url" placeholder="https://...">
+            </div>
+            <div class="form-group">
+                <label>Story / Background</label>
+                <textarea name="story" required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Save Child</button>
+        </form>
+    </div>
+</body>
+</html>

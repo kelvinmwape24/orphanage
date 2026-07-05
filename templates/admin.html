@@ -1,0 +1,102 @@
+ 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard - KM Orphanage</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">🏠 Admin Panel</div>
+            <div class="nav-links">
+                <a href="/">View Site</a>
+                <a href="/admin">Dashboard</a>
+                <a href="/admin/add_child" style="color:#2ecc71;">+ Add Child</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div style="padding:15px; background:{% if category=='success' %}#d4edda{% elif category=='warning' %}#fff3cd{% else %}#f8d7da{% endif %}; border-radius:5px; margin-bottom:20px;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <h1>Orphanage Admin Dashboard</h1>
+        
+        <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:30px;">
+            <div style="background:white; padding:20px; border-radius:10px; flex:1; min-width:150px;">
+                <strong>Total Raised</strong><br>
+                <span style="font-size:2rem;">K{{ progress.amount_raised|round(0) }}</span>
+            </div>
+            <div style="background:white; padding:20px; border-radius:10px; flex:1; min-width:150px;">
+                <strong>Target</strong><br>
+                <span style="font-size:2rem;">K{{ progress.target_amount|round(0) }}</span>
+            </div>
+            <div style="background:white; padding:20px; border-radius:10px; flex:1; min-width:150px;">
+                <strong>Children</strong><br>
+                <span style="font-size:2rem;">{{ children|length }}</span>
+            </div>
+            <div style="background:white; padding:20px; border-radius:10px; flex:1; min-width:150px;">
+                <strong>Donors</strong><br>
+                <span style="font-size:2rem;">{{ donors|length }}</span>
+            </div>
+        </div>
+
+        <h2>Children</h2>
+        <a href="/admin/add_child" class="add-btn">+ Add New Child</a>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Grade</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for child in children %}
+                <tr>
+                    <td>{{ child.id }}</td>
+                    <td>{{ child.name }}</td>
+                    <td>{{ child.age }}</td>
+                    <td>{{ child.school_grade }}</td>
+                    <td class="admin-actions">
+                        <a href="/admin/delete_child/{{ child.id }}" onclick="return confirm('Remove {{ child.name }}?')">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Recent Donors</h2>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for donor in donors %}
+                <tr>
+                    <td>{{ donor.name }}</td>
+                    <td>K{{ donor.amount }}</td>
+                    <td>{{ donor.message[:50] }}...</td>
+                    <td>{{ donor.date_donated.strftime('%Y-%m-%d') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
