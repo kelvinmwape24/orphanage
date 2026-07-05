@@ -1,8 +1,8 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
-from flask_uploads import UploadSet, IMAGES, configure_uploads
 from datetime import datetime
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = "Kelvin2026yyyy@"
@@ -10,12 +10,17 @@ app.secret_key = "Kelvin2026yyyy@"
 # --- CONFIGURATION ---
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orphanage.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['UPLOADED_PHOTOS_DEST'] = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload
 
-# --- UPLOAD SETUP ---
-photos = UploadSet('photos', IMAGES)
-configure_uploads(app, photos)
+# --- CREATE UPLOAD FOLDER IF NOT EXISTS ---
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# --- ALLOWED FILE EXTENSIONS ---
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 db = SQLAlchemy(app)
 
@@ -25,7 +30,7 @@ class Child(db.Model):
     name = db.Column(db.String(100), nullable=False)
     age = db.Column(db.Integer, nullable=False)
     gender = db.Column(db.String(10))
-    photo_filename = db.Column(db.String(200))  # Stores filename
+    photo_filename = db.Column(db.String(200))
     story = db.Column(db.Text)
     school_grade = db.Column(db.String(50))
     location = db.Column(db.String(200))
@@ -146,10 +151,15 @@ def admin():
 def add_child():
     if request.method == 'POST':
         # Handle photo upload
-        if 'photo' in request.files and request.files['photo'].filename != '':
-            filename = photos.save(request.files['photo'])
-        else:
-            filename = 'default.jpg'
+        filename = 'default.jpg'
+        if 'photo' in request.files:
+            file = request.files['photo']
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                # Add timestamp to avoid duplicates
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"{timestamp}_{filename}"
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         
         child = Child(
             name=request.form['name'],
@@ -197,7 +207,7 @@ def delete_video(id):
 # --- STATIC FILES (Uploaded images) ---
 @app.route('/static/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOADED_PHOTOS_DEST'], filename)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == '__main__':
     app.run(debug=True)
