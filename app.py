@@ -150,7 +150,7 @@ def admin():
 @app.route('/admin/add_child', methods=['GET', 'POST'])
 def add_child():
     if request.method == 'POST':
-        # Handle photo upload
+        # Handle photo upload (NO PILLOW)
         filename = 'default.jpg'
         if 'photo' in request.files:
             file = request.files['photo']
