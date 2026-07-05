@@ -1,40 +1,19 @@
- 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Contact - Kelvin Mwape Orphanage</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <nav class="navbar">
-        <div class="container">
-            <div class="logo">🏠 KM Orphanage</div>
-            <div class="nav-links">
-                <a href="/">Home</a>
-                <a href="/donate">Donate</a>
-                <a href="/contact" style="color:#f1c40f;">Contact</a>
-                <a href="/admin" style="color:#e67e22;">Admin</a>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container" style="padding:50px 0; max-width:600px;">
-        <h2>Contact Us</h2>
-        <p style="margin:20px 0;"><strong>Founder:</strong> Kelvin Mwape</p>
-        <p>📞 <strong>Phone:</strong> +260 772 662 225</p>
-        <p>✉️ <strong>Email:</strong> Mwapekelvin18@gmail.com</p>
-        <p>📍 <strong>Location:</strong> Zambia (exact address provided to donors)</p>
-        <hr style="margin:30px 0;">
-        <p><strong>Follow our journey:</strong></p>
-        <p>Facebook: @KMOrphanageZambia</p>
-        <p>TikTok: @kelvin_orphanage</p>
-        <p>WhatsApp: +260 772 662 225</p>
-    </div>
-
-    <footer>
-        <div class="container">
-            <p>© 2026 KM Orphanage. Together we build.</p>
-        </div>
-    </footer>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Contact{% endblock %}
+{% block content %}
+<div class="container" style="padding:50px 0; max-width:600px;">
+    <h2 style="text-align:center; font-size:2.5rem; color:#2c3e50;">Contact Us</h2>
+    <p style="text-align:center; margin:20px 0;"><strong>Founder:</strong> Kelvin Mwape</p>
+    <p style="text-align:center;">📞 <strong>Airtel:</strong> +260 772 662 225</p>
+    <p style="text-align:center;">📞 <strong>MTN:</strong> +260 965 099 741</p>
+    <p style="text-align:center;">✉️ <strong>Email:</strong> Mwapekelvin18@gmail.com</p>
+    <p style="text-align:center;">📍 <strong>Location:</strong> Zambia</p>
+    <hr style="margin:30px 0;">
+    <p style="text-align:center;"><strong>Follow our journey:</strong></p>
+    <p style="text-align:center;">
+        TikTok: @kelvinmwape_the_only_son<br>
+        Facebook: @mr_kelvin<br>
+        Instagram: @mwapekelvin20
+    </p>
+</div>
+{% endblock %}

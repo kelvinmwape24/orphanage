@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Sponsor a Child{% endblock %}
+{% block content %}
+<div class="container" style="padding:60px 0; max-width:800px;">
+    <h1 style="text-align:center; font-size:3rem; color:#2c3e50;">Sponsor a Child</h1>
+    <p style="text-align:center; font-size:1.2rem;">Choose a child to sponsor and change their life forever.</p>
+    <div style="margin-top:40px; display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+        <div style="background:#f8f9fa; padding:20px; border-radius:10px; text-align:center;"><h3>Silver</h3><p>K500/month</p><p>Monthly update + photo</p></div>
+        <div style="background:#f8f9fa; padding:20px; border-radius:10px; text-align:center;"><h3>Gold</h3><p>K1,000/month</p><p>Sponsor Wall + quarterly video</p></div>
+        <div style="background:#f8f9fa; padding:20px; border-radius:10px; text-align:center;"><h3>Platinum</h3><p>K5,000/month</p><p>Building plaque + annual visit</p></div>
+        <div style="background:#f8f9fa; padding:20px; border-radius:10px; text-align:center;"><h3>Corporate</h3><p>K20,000+</p><p>Logo on website + building naming</p></div>
+    </div>
+    <a href="/donate" class="submit-btn" style="display:block; text-align:center; margin-top:40px;">Sponsor Now</a>
+</div>
+{% endblock %}

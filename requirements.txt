@@ -1,4 +1,9 @@
  
 flask
 flask-sqlalchemy
-gunicorn
+gunicornflask 
+flask-sqlalchemy 
+gunicorn 
+flask-uploads 
+pillow 
+stripe 

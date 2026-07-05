@@ -1,70 +1,70 @@
- 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Donate - Kelvin Mwape Orphanage</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <nav class="navbar">
-        <div class="container">
-            <div class="logo">🏠 KM Orphanage</div>
-            <div class="nav-links">
-                <a href="/">Home</a>
-                <a href="/donate" style="color:#f1c40f;">Donate</a>
-                <a href="/contact">Contact</a>
-                <a href="/admin" style="color:#e67e22;">Admin</a>
+{% extends "base.html" %}
+{% block title %}Donate{% endblock %}
+{% block content %}
+<section class="donate-section">
+    <div class="container">
+        <h2>Make a Difference</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div style="padding:15px; background:{% if category=='success' %}#d4edda{% else %}#f8d7da{% endif %}; border-radius:10px; margin-bottom:20px; text-align:center;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="payment-methods">
+            <div class="payment-method">
+                <h4>Airtel Money</h4>
+                <p class="number">+260 772 662 225</p>
+                <small>Reference: "KM Orphanage"</small>
+            </div>
+            <div class="payment-method">
+                <h4>MTN Money</h4>
+                <p class="number">+260 965 099 741</p>
+                <small>Reference: "KM Orphanage"</small>
+            </div>
+            <div class="payment-method">
+                <h4>PayPal</h4>
+                <p>Mwapekelvin18@gmail.com</p>
+                <a href="https://paypal.me/Mwapekelvin18" target="_blank" style="background:#0070ba; color:white; padding:8px 20px; border-radius:20px; display:inline-block; margin-top:10px;">Donate via PayPal</a>
+            </div>
+            <div class="payment-method">
+                <h4>Credit/Debit Card</h4>
+                <p>Secure via Stripe</p>
+                <a href="#" style="background:#5469d4; color:white; padding:8px 20px; border-radius:20px; display:inline-block; margin-top:10px;">Pay with Card</a>
             </div>
         </div>
-    </nav>
 
-    <section class="donate-section">
-        <div class="container">
-            <h2>Make a Difference</h2>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div style="padding:15px; background:{% if category=='success' %}#d4edda{% else %}#f8d7da{% endif %}; border-radius:5px; margin-bottom:20px; text-align:center;">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-
-            <form method="post">
-                <div class="form-group">
-                    <label>Your Full Name</label>
-                    <input type="text" name="name" required placeholder="e.g. John Mwape">
-                </div>
-                <div class="form-group">
-                    <label>Email Address (for receipt)</label>
-                    <input type="email" name="email" required placeholder="john@example.com">
-                </div>
-                <div class="form-group">
-                    <label>Amount (Kwacha)</label>
-                    <input type="number" name="amount" required min="1" step="0.01" placeholder="e.g. 100">
-                </div>
-                <div class="form-group">
-                    <label>Your Message (optional)</label>
-                    <textarea name="message" placeholder="Your words of encouragement..."></textarea>
-                </div>
-                <button type="submit" class="submit-btn">💛 Donate Now</button>
-            </form>
-
-            <div style="margin-top:30px; text-align:center;">
-                <p><strong>Or send directly via Mobile Money:</strong></p>
-                <p>Airtel Money: <strong>+260 772 662 225</strong></p>
-                <p>MTN Money: <strong>+260 772 662 225</strong></p>
-                <p><small>Reference: "KM Orphanage"</small></p>
+        <form method="post" style="margin-top:30px;">
+            <div class="form-group">
+                <label>Your Full Name</label>
+                <input type="text" name="name" required placeholder="e.g. John Mwape">
             </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <p>📞 +260 772 662 225 • ✉️ Mwapekelvin18@gmail.com</p>
-        </div>
-    </footer>
-</body>
-</html>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" required placeholder="john@example.com">
+            </div>
+            <div class="form-group">
+                <label>Amount (Kwacha)</label>
+                <input type="number" name="amount" required min="1" step="0.01" placeholder="e.g. 100">
+            </div>
+            <div class="form-group">
+                <label>Payment Method</label>
+                <select name="method">
+                    <option value="Airtel Money">Airtel Money</option>
+                    <option value="MTN Money">MTN Money</option>
+                    <option value="PayPal">PayPal</option>
+                    <option value="Credit Card">Credit/Debit Card</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Your Message (optional)</label>
+                <textarea name="message" placeholder="Your words of encouragement..."></textarea>
+            </div>
+            <button type="submit" class="submit-btn">💛 Donate Now</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -1,93 +1,92 @@
- 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Kelvin Mwape Orphanage & Children's Home Zambia. Support orphans with shelter, education, and love. Donate today.">
-    <title>Kelvin Mwape Orphanage & Children's Home</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <nav class="navbar">
-        <div class="container">
-            <div class="logo">🏠 KM Orphanage</div>
-            <div class="nav-links">
-                <a href="/">Home</a>
-                <a href="#children">Our Children</a>
-                <a href="/donate">Donate</a>
-                <a href="/contact">Contact</a>
-                <a href="/admin" style="color:#e67e22;">Admin</a>
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<section class="hero">
+    {% if videos %}
+        <video autoplay muted loop playsinline>
+            <source src="{{ videos[0].embed_url }}" type="video/mp4">
+        </video>
+    {% else %}
+        <div class="hero-overlay"></div>
+    {% endif %}
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1>Building Futures, One Child at a Time</h1>
+        <p>Kelvin Mwape Orphanage provides shelter, education, and love to orphans in Zambia. Help us build a permanent home.</p>
+        <a href="/donate" class="btn">Sponsor a Child Today</a>
+    </div>
+</section>
+
+<section class="stats">
+    <div class="container">
+        <div class="stat-box">
+            <div class="number">K{{ total|round(0) }}</div>
+            <div class="label">Total Raised</div>
+        </div>
+        <div class="stat-box">
+            <div class="number">{{ donor_count }}</div>
+            <div class="label">Donors</div>
+        </div>
+        <div class="stat-box">
+            <div class="number">{{ children|length }}</div>
+            <div class="label">Children Supported</div>
+        </div>
+    </div>
+</section>
+
+<section class="progress-section">
+    <div class="container">
+        <h2>Building Progress: {{ progress.description }}</h2>
+        <div class="progress-bar-bg">
+            <div class="progress-fill" style="width: {{ (progress.amount_raised / progress.target_amount) * 100 }}%;">
+                K{{ progress.amount_raised|round(0) }} / K{{ progress.target_amount|round(0) }}
             </div>
         </div>
-    </nav>
+        <a href="/donate" class="btn" style="background:#e67e22; color:white; padding:15px 40px; margin-top:20px;">Donate Now</a>
+    </div>
+</section>
 
-    <section class="hero">
-        <div class="container">
-            <h1>Building Futures, One Child at a Time</h1>
-            <p>Kelvin Mwape Orphanage provides shelter, education, and love to orphans in Zambia. Help us build a permanent home.</p>
-            <a href="/donate" class="btn">Sponsor a Child Today</a>
-        </div>
-    </section>
-
-    <section class="stats">
-        <div class="container">
-            <div class="stat-box">
-                <div class="number">K{{ total|round(0) }}</div>
-                <div class="label">Total Raised</div>
-            </div>
-            <div class="stat-box">
-                <div class="number">{{ donor_count }}</div>
-                <div class="label">Donors</div>
-            </div>
-            <div class="stat-box">
-                <div class="number">{{ children|length }}</div>
-                <div class="label">Children Supported</div>
-            </div>
-        </div>
-    </section>
-
-    <section class="progress-section">
-        <div class="container">
-            <h2>Building Progress: {{ progress.description }}</h2>
-            <div class="progress-bar-bg">
-                <div class="progress-fill" style="width: {{ (progress.amount_raised / progress.target_amount) * 100 }}%;">
-                    K{{ progress.amount_raised|round(0) }} / K{{ progress.target_amount|round(0) }}
+<section class="children-section" id="children">
+    <div class="container">
+        <h2>Meet Our Children</h2>
+        <div class="child-grid">
+            {% for child in children %}
+            <div class="child-card">
+                <img src="{{ url_for('uploaded_file', filename=child.photo_filename) }}" alt="{{ child.name }}">
+                <div class="info">
+                    <h3>{{ child.name }}</h3>
+                    <div class="age">Age {{ child.age }} • {{ child.school_grade }}</div>
+                    <div class="location"><i class="fas fa-map-marker-alt"></i> {{ child.location }}</div>
+                    <p class="story">{{ child.story[:100] }}...</p>
+                    <a href="/sponsor" class="sponsor-btn">Sponsor {{ child.name }}</a>
                 </div>
             </div>
-            <p>Help us reach our goal!</p>
-            <a href="/donate" class="btn" style="background:#e67e22; color:white; padding:10px 25px;">Donate Now</a>
+            {% endfor %}
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="children-section" id="children">
-        <div class="container">
-            <h2>Meet Our Children</h2>
-            <div class="child-grid">
-                {% for child in children %}
-                <div class="child-card">
-                    <img src="{{ child.photo_url }}" alt="{{ child.name }}" onerror="this.src='https://images.unsplash.com/photo-1543269865-cbf427effbad?w=400&h=400&fit=crop'">
-                    <div class="info">
-                        <h3>{{ child.name }}</h3>
-                        <div class="age">Age {{ child.age }} • {{ child.school_grade }}</div>
-                        <p class="story">{{ child.story[:100] }}...</p>
-                        <a href="/donate" class="sponsor-btn">Sponsor {{ child.name }}</a>
-                    </div>
+<section class="map-section">
+    <div class="container">
+        <h2>Our Location</h2>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3839.123456789!2d28.123456!3d-15.123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTXCsDA3JzI0LjQiUyAyOMKwMDcnMjQuNCJF!5e0!3m2!1sen!2szm!4v1234567890" allowfullscreen loading="lazy"></iframe>
+    </div>
+</section>
+
+<section class="video-section">
+    <div class="container">
+        <h2>Our Journey in Video</h2>
+        <div class="video-grid">
+            {% for video in videos %}
+            <div class="video-card">
+                <iframe src="{{ video.embed_url }}" frameborder="0" allowfullscreen></iframe>
+                <div class="info">
+                    <h3>{{ video.title }}</h3>
+                    <p>{{ video.description }}</p>
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
         </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <p><strong>Kelvin Mwape Orphanage & Children's Home</strong></p>
-            <p>📍 Zambia • 📞 +260 772 662 225 • ✉️ Mwapekelvin18@gmail.com</p>
-            <div class="social-links">
-                <a href="#">Facebook</a> • <a href="#">TikTok</a> • <a href="#">WhatsApp</a>
-            </div>
-            <p>&copy; 2026 KM Orphanage. All rights reserved.</p>
-        </div>
-    </footer>
-</body>
-</html>
+    </div>
+</section>
+{% endblock %}
