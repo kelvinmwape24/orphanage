@@ -11,9 +11,9 @@ app.secret_key = "Kelvin2026yyyy@"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orphanage.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-# --- CREATE UPLOAD FOLDER IF NOT EXISTS ---
+# --- CREATE UPLOAD FOLDER ---
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # --- ALLOWED FILE EXTENSIONS ---
@@ -130,7 +130,7 @@ def donate():
         return redirect(url_for('home'))
     return render_template('donate.html')
 
-# --- ADMIN PANEL (SECURE) ---
+# --- ADMIN PANEL ---
 ADMIN_PASSWORD = "Kelvin2026yyyy@"
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -150,13 +150,11 @@ def admin():
 @app.route('/admin/add_child', methods=['GET', 'POST'])
 def add_child():
     if request.method == 'POST':
-        # Handle photo upload
         filename = 'default.jpg'
         if 'photo' in request.files:
             file = request.files['photo']
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                # Add timestamp to avoid duplicates
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 filename = f"{timestamp}_{filename}"
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -204,7 +202,6 @@ def delete_video(id):
     flash("Video removed", "warning")
     return redirect(url_for('admin'))
 
-# --- STATIC FILES (Uploaded images) ---
 @app.route('/static/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
